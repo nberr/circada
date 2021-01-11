@@ -4,6 +4,8 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="aV2E0m" name="circada">
     <GROUP id="{FDF6E97B-1EA3-420A-A519-34706BF353E1}" name="Source">
+      <FILE id="KkKFlN" name="CircadaParameters.h" compile="0" resource="0"
+            file="Source/CircadaParameters.h"/>
       <FILE id="a2aFyz" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="hYzScZ" name="PluginProcessor.h" compile="0" resource="0"
@@ -51,4 +53,7 @@
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
+  <LIVE_SETTINGS>
+    <OSX/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>

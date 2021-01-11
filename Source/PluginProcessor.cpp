@@ -9,6 +9,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include "CircadaParameters.h"
+
 //==============================================================================
 CircadaAudioProcessor::CircadaAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -19,8 +21,9 @@ CircadaAudioProcessor::CircadaAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
 #endif
+parameters(*this, nullptr, "PARAMETERS", createParameterLayout())
 {
 }
 
@@ -150,7 +153,7 @@ void CircadaAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     // interleaved by keeping the same state.
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
+        // auto* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
     }
@@ -180,6 +183,36 @@ void CircadaAudioProcessor::setStateInformation (const void* data, int sizeInByt
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
 }
+
+juce::AudioProcessorValueTreeState::ParameterLayout  CircadaAudioProcessor::createParameterLayout()
+{
+    std::vector<std::unique_ptr<juce::AudioProcessorParameter>> params;
+    /*
+     CP_Play = 0, // on/off
+     CP_Rate, // -2Hz to 2Hz
+     CP_Length, // 500ms to 3s
+     CP_Offset, // 0% to 100%
+     //Reset, // button skips playback to the offset position
+     //Rampsmooth
+     CP_Longmode, // on/off
+     CP_Dry, // 0% to 100%
+     CP_Wet, // -30dB to 12dB
+     // vu meter
+     CP_PostRecord, // on/off
+     */
+    
+    params.push_back(std::make_unique<juce::AudioParameterBool>(CircadaParameterID[0], CircadaParameterID[0], false));
+    
+    
+    /*
+    for (int i = 0; i < CP_TotalNumParameters; i++)
+    {
+        // params.push_back();
+    }
+    */
+    return { params.begin(), params.end() };
+}
+
 
 //==============================================================================
 // This creates new instances of the plugin..
