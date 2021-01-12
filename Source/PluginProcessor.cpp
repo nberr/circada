@@ -196,29 +196,25 @@ juce::AudioProcessorValueTreeState::ParameterLayout  CircadaAudioProcessor::crea
 {
     juce::AudioProcessorValueTreeState::ParameterLayout params;
     
-    // play - on/off
-    params.add(std::make_unique<juce::AudioParameterBool>(CircadaParameterID[0], CircadaParameterID[0], false));
-    
-    // rate - -2hz to 2hz
-    params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[1],CircadaParameterID[1], -2, 2, 0));
-    
-    // length - 500ms to 3s
-    params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[2],CircadaParameterID[2], 0.5, 3, 1));
-    
-    // offset - 0% to 100%
-    params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[3],CircadaParameterID[3], 0, 1, 0.5));
-    
-    // longmode - on/off
-    params.add(std::make_unique<juce::AudioParameterBool>(CircadaParameterID[4], CircadaParameterID[4], false));
-    
-    // dry - 0% to 100%
-    params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[5],CircadaParameterID[5], 0, 1, 0.5));
-    
-    // wet - -30dB to 12dB
-    params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[6],CircadaParameterID[6], -30, 12, 0));
-    
-    // postrecord - on/off
-    params.add(std::make_unique<juce::AudioParameterBool>(CircadaParameterID[7], CircadaParameterID[7], false));
+    for (int i = 0; i < CP_TotalNumParameters; i++)
+    {
+        switch(CircadaParameterTypes[i]) {
+            case is_int:
+                break;
+            case is_bool:
+                params.add(std::make_unique<juce::AudioParameterBool>(CircadaParameterID[i],
+                                                                      CircadaParameterID[i],
+                                                                      CircadaParameterDefaultValues[i].bvalue));
+                break;
+            case is_float:
+                params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[i],
+                                                                       CircadaParameterID[i],
+                                                                       CircadaParameterMinValues[i].fvalue,
+                                                                       CircadaParamaterMaxValues[i].fvalue,
+                                                                       CircadaParameterDefaultValues[i].fvalue));
+                break;
+        }
+    }
     
     return params;
 }

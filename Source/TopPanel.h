@@ -22,5 +22,7 @@ public:
     void paint(juce::Graphics& g) override;
     
 private:
+    std::unique_ptr<juce::Slider> mLengthSlider;
     
+    float *mLengthParameter;
 };
