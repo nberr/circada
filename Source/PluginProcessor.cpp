@@ -176,41 +176,51 @@ void CircadaAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    auto state = parameters.copyState();
+    std::unique_ptr<juce::XmlElement> xml (state.createXml());
+    copyXmlToBinary (*xml, destData);
 }
 
 void CircadaAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName (parameters.state.getType()))
+            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout  CircadaAudioProcessor::createParameterLayout()
 {
-    std::vector<std::unique_ptr<juce::AudioProcessorParameter>> params;
-    /*
-     CP_Play = 0, // on/off
-     CP_Rate, // -2Hz to 2Hz
-     CP_Length, // 500ms to 3s
-     CP_Offset, // 0% to 100%
-     //Reset, // button skips playback to the offset position
-     //Rampsmooth
-     CP_Longmode, // on/off
-     CP_Dry, // 0% to 100%
-     CP_Wet, // -30dB to 12dB
-     // vu meter
-     CP_PostRecord, // on/off
-     */
+    juce::AudioProcessorValueTreeState::ParameterLayout params;
     
-    params.push_back(std::make_unique<juce::AudioParameterBool>(CircadaParameterID[0], CircadaParameterID[0], false));
+    // play - on/off
+    params.add(std::make_unique<juce::AudioParameterBool>(CircadaParameterID[0], CircadaParameterID[0], false));
     
+    // rate - -2hz to 2hz
+    params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[1],CircadaParameterID[1], -2, 2, 0));
     
-    /*
-    for (int i = 0; i < CP_TotalNumParameters; i++)
-    {
-        // params.push_back();
-    }
-    */
-    return { params.begin(), params.end() };
+    // length - 500ms to 3s
+    params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[2],CircadaParameterID[2], 0.5, 3, 1));
+    
+    // offset - 0% to 100%
+    params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[3],CircadaParameterID[3], 0, 1, 0.5));
+    
+    // longmode - on/off
+    params.add(std::make_unique<juce::AudioParameterBool>(CircadaParameterID[4], CircadaParameterID[4], false));
+    
+    // dry - 0% to 100%
+    params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[5],CircadaParameterID[5], 0, 1, 0.5));
+    
+    // wet - -30dB to 12dB
+    params.add(std::make_unique<juce::AudioParameterFloat>(CircadaParameterID[6],CircadaParameterID[6], -30, 12, 0));
+    
+    // postrecord - on/off
+    params.add(std::make_unique<juce::AudioParameterBool>(CircadaParameterID[7], CircadaParameterID[7], false));
+    
+    return params;
 }
 
 

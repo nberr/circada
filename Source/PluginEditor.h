@@ -11,6 +11,9 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
+#include "MainPanel.h"
+#include "CircadaLookAndFeel.h"
+
 //==============================================================================
 /**
 */
@@ -28,6 +31,9 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     CircadaAudioProcessor& audioProcessor;
+    
+    std::unique_ptr<MainPanel> mMainPanel;
+    std::unique_ptr<CircadaLookAndFeel> mLookAndFeel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CircadaAudioProcessorEditor)
 };
